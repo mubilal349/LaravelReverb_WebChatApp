@@ -322,6 +322,58 @@
             border-top-left-radius: 5px;
         }
 
+        .message-text {
+            margin-bottom: 5px;
+        }
+
+        .message-image {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-bottom: 5px;
+        }
+
+        .message-image:hover {
+            transform: scale(1.02);
+        }
+
+        .message-file {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .message-file:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .message-file-icon {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .message-file-info {
+            flex: 1;
+        }
+
+        .message-file-name {
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .message-file-size {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
         .message-info {
             display: flex;
             align-items: center;
@@ -419,6 +471,7 @@
             cursor: pointer;
             font-size: 1.1rem;
             transition: color 0.2s;
+            position: relative;
         }
 
         .input-actions button:hover {
@@ -429,28 +482,8 @@
             color: var(--user2-color);
         }
 
-        .message-input-wrapper {
-            flex: 1;
-            position: relative;
-        }
-
-        .message-input {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 25px;
-            border: 1px solid var(--border-color);
-            outline: none;
-            resize: none;
-            font-size: 0.95rem;
-            transition: border-color 0.2s;
-        }
-
-        .user1 .message-input:focus {
-            border-color: var(--user1-color);
-        }
-
-        .user2 .message-input:focus {
-            border-color: var(--user2-color);
+        .file-input {
+            display: none;
         }
 
         .send-button {
@@ -478,6 +511,30 @@
 
         .user2 .send-button {
             background-color: var(--user2-color);
+        }
+
+        .message-input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .message-input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 25px;
+            border: 1px solid var(--border-color);
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+
+        .user1 .message-input:focus {
+            border-color: var(--user1-color);
+        }
+
+        .user2 .message-input:focus {
+            border-color: var(--user2-color);
         }
 
         .connection-status {
@@ -512,6 +569,53 @@
             100% {
                 box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
             }
+        }
+
+        /* Image Preview Modal */
+        .image-preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 3000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .image-preview-modal.active {
+            display: flex;
+        }
+
+        .image-preview-container {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .image-preview-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .image-preview-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .image-preview-close:hover {
+            transform: scale(1.1);
         }
 
         /* WebRTC Call Modal Styles */
@@ -1274,15 +1378,16 @@
                         <button type="button">
                             <i class="fas fa-smile"></i>
                         </button>
-                        <button type="button">
+                        <button type="button" onclick="document.getElementById('fileInput1').click()">
                             <i class="fas fa-paperclip"></i>
                         </button>
+                        <input type="file" id="fileInput1" class="file-input" accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.txt" onchange="handleFileSelect(event, 'user1')">
                     </div>
-                    
+
                     <div class="message-input-wrapper">
                         <input type="text" class="message-input" id="input1" placeholder="Type a message..." required>
                     </div>
-                    
+
                     <button type="submit" class="send-button">
                         <i class="fas fa-paper-plane"></i>
                     </button>
@@ -1345,20 +1450,29 @@
                         <button type="button">
                             <i class="fas fa-smile"></i>
                         </button>
-                        <button type="button">
+                        <button type="button" onclick="document.getElementById('fileInput2').click()">
                             <i class="fas fa-paperclip"></i>
                         </button>
+                        <input type="file" id="fileInput2" class="file-input" accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.txt" onchange="handleFileSelect(event, 'user2')">
                     </div>
-                    
+
                     <div class="message-input-wrapper">
                         <input type="text" class="message-input" id="input2" placeholder="Type a message..." required>
                     </div>
-                    
+
                     <button type="submit" class="send-button">
                         <i class="fas fa-paper-plane"></i>
                     </button>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div class="image-preview-modal" id="imagePreviewModal" onclick="closeImagePreview()">
+        <div class="image-preview-container">
+            <span class="image-preview-close">&times;</span>
+            <img id="previewImage" class="image-preview-img" src="" alt="Preview">
         </div>
     </div>
 
@@ -1552,6 +1666,12 @@
             }
         };
 
+        // File Upload Variables
+        let selectedFiles = {
+            user1: null,
+            user2: null
+        };
+
         // WebRTC Configuration
         const configuration = {
             iceServers: [
@@ -1571,24 +1691,18 @@
             // Load profile data from localStorage
             loadProfileData();
             
-            // Add initial messages
-            addMessage('messages1', 'sent', 'Hey! How are you doing?', 'User 1');
-            addMessage('messages2', 'received', 'Hey! How are you doing?', 'User 1');
-            
-            setTimeout(() => {
-                addMessage('messages2', 'sent', "I'm doing great! Just working on some projects.", 'User 2');
-                addMessage('messages1', 'received', "I'm doing great! Just working on some projects.", 'User 2');
-            }, 1000);
+            // Load messages from localStorage
+            loadMessages();
             
             // Setup form listeners
             document.getElementById('form1').addEventListener('submit', function(e) {
                 e.preventDefault();
-                sendMessage('input1', 'User 1', 'User 2', 'messages1', 'messages2', 'typing2');
+                sendMessage('input1', 'User 1', 'User 2', 'messages1', 'messages2', 'typing2', 'user1');
             });
             
             document.getElementById('form2').addEventListener('submit', function(e) {
                 e.preventDefault();
-                sendMessage('input2', 'User 2', 'User 1', 'messages2', 'messages1', 'typing1');
+                sendMessage('input2', 'User 2', 'User 1', 'messages2', 'messages1', 'typing1', 'user2');
             });
             
             // Setup typing indicators
@@ -1598,6 +1712,127 @@
             // Setup profile image upload
             document.getElementById('profileAvatarUpload').addEventListener('change', handleAvatarUpload);
         });
+
+        // File Upload Functions
+        function handleFileSelect(event, userId) {
+            const file = event.target.files[0];
+            if (file) {
+                selectedFiles[userId] = file;
+                
+                // Auto-send the file
+                const sender = userId === 'user1' ? 'User 1' : 'User 2';
+                const receiver = userId === 'user1' ? 'User 2' : 'User 1';
+                const senderMessages = userId === 'user1' ? 'messages1' : 'messages2';
+                const receiverMessages = userId === 'user1' ? 'messages2' : 'messages1';
+                const typingId = userId === 'user1' ? 'typing2' : 'typing1';
+                
+                sendFile(file, sender, receiver, senderMessages, receiverMessages, typingId, userId);
+                
+                // Clear the file input
+                event.target.value = '';
+            }
+        }
+
+        function sendFile(file, sender, receiver, senderMessages, receiverMessages, typingId, userId) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const fileData = e.target.result;
+                const timestamp = new Date().toISOString();
+                
+                // Create message object for storage
+                const messageObj = {
+                    sender: sender,
+                    receiver: receiver,
+                    type: file.type.startsWith('image/') ? 'image' : 'file',
+                    fileName: file.name,
+                    fileSize: formatFileSize(file.size),
+                    data: fileData,
+                    timestamp: timestamp
+                };
+                
+                // Save message to localStorage
+                saveMessage(messageObj);
+                
+                // Add message to sender's view
+                addMessageToDOM(senderMessages, 'sent', null, sender, timestamp, messageObj);
+                
+                // Add message to receiver's view
+                addMessageToDOM(receiverMessages, 'received', null, sender, timestamp, messageObj);
+                
+                // Hide typing indicator
+                document.getElementById(typingId).classList.remove('show');
+                
+                // Simulate read receipt after 1 second
+                setTimeout(() => {
+                    updateMessageStatus(senderMessages, 'read');
+                }, 1000);
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function openImagePreview(imageSrc) {
+            const modal = document.getElementById('imagePreviewModal');
+            const previewImg = document.getElementById('previewImage');
+            previewImg.src = imageSrc;
+            modal.classList.add('active');
+        }
+
+        function closeImagePreview() {
+            document.getElementById('imagePreviewModal').classList.remove('active');
+        }
+
+        // Message Storage Functions
+        function saveMessage(message) {
+            // Get existing messages from localStorage
+            let messages = JSON.parse(localStorage.getItem('chatMessages') || '[]');
+            
+            // Add new message
+            messages.push(message);
+            
+            // Save back to localStorage
+            localStorage.setItem('chatMessages', JSON.stringify(messages));
+        }
+
+        function loadMessages() {
+            // Get messages from localStorage
+            const messages = JSON.parse(localStorage.getItem('chatMessages') || '[]');
+            
+            // Clear existing messages
+            document.getElementById('messages1').innerHTML = '<div class="date-divider"><span>Today</span></div>';
+            document.getElementById('messages2').innerHTML = '<div class="date-divider"><span>Today</span></div>';
+            
+            // Add each message to appropriate container
+            messages.forEach(message => {
+                if (message.sender === 'User 1') {
+                    addMessageToDOM('messages1', 'sent', message.text, message.sender, message.timestamp, message);
+                    addMessageToDOM('messages2', 'received', message.text, message.sender, message.timestamp, message);
+                } else {
+                    addMessageToDOM('messages1', 'received', message.text, message.sender, message.timestamp, message);
+                    addMessageToDOM('messages2', 'sent', message.text, message.sender, message.timestamp, message);
+                }
+            });
+            
+            // If no messages, add initial messages
+            if (messages.length === 0) {
+                addMessage('messages1', 'sent', 'Hey! How are you doing?', 'User 1');
+                addMessage('messages2', 'received', 'Hey! How are you doing?', 'User 1');
+                
+                setTimeout(() => {
+                    addMessage('messages2', 'sent', "I'm doing great! Just working on some projects.", 'User 2');
+                    addMessage('messages1', 'received', "I'm doing great! Just working on some projects.", 'User 2');
+                }, 1000);
+            }
+        }
 
         function loadProfileData() {
             // Try to load profile data from localStorage
@@ -1725,17 +1960,32 @@
             closeProfileEditModal();
         }
 
-        function sendMessage(inputId, sender, receiver, senderMessages, receiverMessages, typingId) {
+        function sendMessage(inputId, sender, receiver, senderMessages, receiverMessages, typingId, userId) {
             const input = document.getElementById(inputId);
             const message = input.value.trim();
             
-            if (!message) return;
+            if (!message && !selectedFiles[userId]) return;
+            
+            // Get current timestamp
+            const timestamp = new Date().toISOString();
+            
+            // Create message object for storage
+            const messageObj = {
+                sender: sender,
+                receiver: receiver,
+                text: message || null,
+                type: 'text',
+                timestamp: timestamp
+            };
+            
+            // Save message to localStorage
+            saveMessage(messageObj);
             
             // Add message to sender's view
-            addMessage(senderMessages, 'sent', message, sender);
+            addMessageToDOM(senderMessages, 'sent', message, sender, timestamp, messageObj);
             
             // Add message to receiver's view
-            addMessage(receiverMessages, 'received', message, sender);
+            addMessageToDOM(receiverMessages, 'received', message, sender, timestamp, messageObj);
             
             // Clear input
             input.value = '';
@@ -1750,17 +2000,37 @@
         }
 
         function addMessage(containerId, type, text, sender) {
+            // Create a timestamp for new messages
+            const timestamp = new Date().toISOString();
+            
+            // Add to DOM and save to localStorage
+            addMessageToDOM(containerId, type, text, sender, timestamp);
+            
+            // Create message object for storage
+            const messageObj = {
+                sender: sender,
+                text: text,
+                type: 'text',
+                timestamp: timestamp
+            };
+            
+            // Save to localStorage
+            saveMessage(messageObj);
+        }
+
+        function addMessageToDOM(containerId, type, text, sender, timestamp, messageObj = null) {
             const container = document.getElementById(containerId);
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${type}`;
             
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            // Parse timestamp or use current time
+            const messageTime = timestamp ? new Date(timestamp) : new Date();
+            const timeString = messageTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
             
             // Determine avatar based on sender and type
             let avatarHtml;
             if (type === 'sent') {
-                // For sent messages, use the current user's avatar
+                // For sent messages, use current user's avatar
                 const userId = containerId === 'messages1' ? 'user1' : 'user2';
                 const userData = profileData[userId];
                 
@@ -1781,10 +2051,36 @@
                 }
             }
             
+            // Build message content based on type
+            let messageContent = '';
+            if (messageObj) {
+                if (messageObj.type === 'image') {
+                    messageContent = `
+                        <img src="${messageObj.data}" alt="${messageObj.fileName}" class="message-image" onclick="openImagePreview('${messageObj.data}')">
+                    `;
+                } else if (messageObj.type === 'file') {
+                    messageContent = `
+                        <div class="message-file" onclick="downloadFile('${messageObj.data}', '${messageObj.fileName}')">
+                            <i class="fas fa-file message-file-icon"></i>
+                            <div class="message-file-info">
+                                <div class="message-file-name">${messageObj.fileName}</div>
+                                <div class="message-file-size">${messageObj.fileSize}</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    messageContent = `<div class="message-text">${messageObj.text}</div>`;
+                }
+            } else {
+                messageContent = `<div class="message-text">${text}</div>`;
+            }
+            
             messageDiv.innerHTML = `
                 <div class="message-avatar">${avatarHtml}</div>
                 <div class="message-content">
-                    <div class="message-bubble">${text}</div>
+                    <div class="message-bubble">
+                        ${messageContent}
+                    </div>
                     <div class="message-info">
                         <span class="message-time">${timeString}</span>
                         ${type === 'sent' ? '<span class="message-status"><i class="fas fa-check"></i></span>' : ''}
@@ -1794,6 +2090,15 @@
             
             container.appendChild(messageDiv);
             container.scrollTop = container.scrollHeight;
+        }
+
+        function downloadFile(data, fileName) {
+            const link = document.createElement('a');
+            link.href = data;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function updateMessageStatus(containerId, status) {

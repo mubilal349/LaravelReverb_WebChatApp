@@ -17,6 +17,7 @@ class ChatController extends Controller
     // Send a new message
     public function send(Request $request)
     {
+        dd($request->all());
         $request->validate([
             'sender' => 'required|string',
             'receiver' => 'required|string',
